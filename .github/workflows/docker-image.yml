@@ -15,5 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build -f ./project/Dockerfile --tag noumanhere/flask-blog-app:$(date +%s)
+      run: cd project
+      run: docker build . --file Dockerfile --tag noumanhere/flask-blog-app:$(date +%s)
 #       run: docker build ./project/. --file Dockerfile --tag noumanhere/flask-blog-app:$(date +%s)
