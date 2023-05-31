@@ -1,1 +1,23 @@
----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+  namespace: flask-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: blog-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: blog-app
+    spec:
+      containers:
+        - name: flask-app-container
+          image: noumanhere/flask-blog-app:0.0.1
+          ports:
+            - name: http
+              containerPort: 5000

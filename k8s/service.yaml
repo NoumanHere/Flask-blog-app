@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  namespace: flask-ns
+spec:
+  selector:
+    app: blog-app
+  ports:
+    - port: 5002
+      targetPort: 5000
+  type: LoadBalancer
