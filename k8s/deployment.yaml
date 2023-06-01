@@ -4,7 +4,7 @@ metadata:
   name: flask-deployment
   namespace: flask-ns
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: blog-app
