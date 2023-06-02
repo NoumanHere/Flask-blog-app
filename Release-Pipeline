@@ -1,0 +1,14 @@
+steps:
+- powershell: |
+   Copy-Item -Path "C:\Agent\_work\2\a\*" -Destination "C:\Documents" -Recurse -Force
+   cd C:\Documents
+   $image_tag = cat C:\Documents\tag.txt
+   $image_tag
+   (Get-Content -Path "C:\Documents\k8s\deployment.yaml" -Raw) `
+    -replace 'nouman74/k8s:.*', "nouman74/k8s:$image_tag" | `
+     Set-Content -Path "C:\Documents\k8s\deployment.yaml"
+   
+   kubectl apply -f C:\Documents\k8s\deployment.yaml
+   
+   kubectl get pods -n flask-ns
+  displayName: 'PowerShell Script'

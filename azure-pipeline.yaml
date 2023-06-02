@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+      - feature
+      - release*
+
+
+pool:
+  name: Demo Pool
+
+
+variables:
+  branchName: $(Build.SourceBranchName)
+  tag: $[replace(replace(replace(variables['branchName'], '^feature([0-9]+\.[0-9]+).*$', '$1'), '^dev([0-9]+\.[0-9]+).*$', '$1'), '^release([0-9]+\.[0-9]+).*$', '$1')]
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      docker login -u $(dockerHubUsername) -p $(dockerHubPassword)
+      ls 
+      cd project
+      docker build -t $(dockerHubUsername)/k8s:$(tag) .
+      docker push $(dockerHubUsername)/k8s:$(tag)
+  displayName: 'Build and push image'
+
+- script: echo $(tag) > $(Build.ArtifactStagingDirectory)/tag.txt
+  displayName: 'Create Tag Artifact'
+ 
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    
+
