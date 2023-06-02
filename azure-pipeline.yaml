@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
   branches:
     include:
@@ -34,12 +29,7 @@ steps:
 
 - script: echo $(tag) > $(Build.ArtifactStagingDirectory)/tag.txt
   displayName: 'Create Tag Artifact'
-
-# - task: CopyFiles@2
-#   inputs:
-#     contents: '$(Build.ArtifactStagingDirectory)/tag.txt'
-#     targetFolder: '$(Build.ArtifactStagingDirectory)/BuildNumber'
-  
+ 
 
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
@@ -48,21 +38,3 @@ steps:
     TargetFolder: '$(build.artifactstagingdirectory)'
     
 
-# - script: |
-#     docker build -t mydockerhub/myimage:$(tag) .
-#     docker push mydockerhub/myimage:$(tag)
-
-#   displayName: 'Build and Push Docker Image'
-
-# - script: echo "$(Build.BuildNumber)"
-#   displayName: 'Set Build Number'
-
-# - task: CopyFiles@2
-#   inputs:
-#     sourceFolder: '$(Build.BuildNumber)'
-#     targetFolder: '$(Build.ArtifactStagingDirectory)/BuildNumber'
-
-# - task: PublishBuildArtifacts@1
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)/BuildNumber'
-#     ArtifactName: 'BuildNumber'
