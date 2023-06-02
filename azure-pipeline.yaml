@@ -1,0 +1,68 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - main
+      - dev
+      - feature
+      - release*
+
+
+pool:
+  name: Demo Pool
+
+
+variables:
+  branchName: $(Build.SourceBranchName)
+  tag: $[replace(replace(replace(variables['branchName'], '^feature([0-9]+\.[0-9]+).*$', '$1'), '^dev([0-9]+\.[0-9]+).*$', '$1'), '^release([0-9]+\.[0-9]+).*$', '$1')]
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      docker login -u $(dockerHubUsername) -p $(dockerHubPassword)
+      ls 
+      cd project
+      docker build -t $(dockerHubUsername)/k8s:$(tag) .
+      docker push $(dockerHubUsername)/k8s:$(tag)
+  displayName: 'Build and push image'
+
+- script: echo $(tag) > $(Build.ArtifactStagingDirectory)/tag.txt
+  displayName: 'Create Tag Artifact'
+
+# - task: CopyFiles@2
+#   inputs:
+#     contents: '$(Build.ArtifactStagingDirectory)/tag.txt'
+#     targetFolder: '$(Build.ArtifactStagingDirectory)/BuildNumber'
+  
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    
+
+# - script: |
+#     docker build -t mydockerhub/myimage:$(tag) .
+#     docker push mydockerhub/myimage:$(tag)
+
+#   displayName: 'Build and Push Docker Image'
+
+# - script: echo "$(Build.BuildNumber)"
+#   displayName: 'Set Build Number'
+
+# - task: CopyFiles@2
+#   inputs:
+#     sourceFolder: '$(Build.BuildNumber)'
+#     targetFolder: '$(Build.ArtifactStagingDirectory)/BuildNumber'
+
+# - task: PublishBuildArtifacts@1
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)/BuildNumber'
+#     ArtifactName: 'BuildNumber'
