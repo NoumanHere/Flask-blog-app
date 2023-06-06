@@ -1,17 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: dashboard-ingress
-  namespace: kubernetes-dashboard
+  name: blog-app-ingress
+  namespace: flask-ns
 spec:
   rules:
-  - host: dashboard.info
+  - host: myblog.com
     http:
       paths:
         - pathType: Prefix
           path: "/"
           backend:
             service:
-              name: kubernetes-dashboard
+              name: flask-service
               port:
-                number: 443            
+                number: 443      

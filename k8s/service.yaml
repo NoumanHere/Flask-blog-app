@@ -7,6 +7,6 @@ spec:
   selector:
     app: blog-app
   ports:
-    - port: 5002
+    - port: 5001
       targetPort: 5000
-  type: LoadBalancer
+  type: ClusterIP

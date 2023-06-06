@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-deployment
+  name: flask--blog-deployment
   namespace: flask-ns
 spec:
   replicas: 3
